@@ -21,4 +21,23 @@ public class Product {
     public int getPrice() { return price; }
     public int getQuantity() { return quantity; }
     public String getDescription() { return description; }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if(this == obj)
+            return true;
+
+        if(obj == null || getClass() != obj.getClass())
+            return false;
+
+        Product other = (Product)obj;
+
+        return name.equals(other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }
