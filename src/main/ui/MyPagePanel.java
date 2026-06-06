@@ -1,14 +1,11 @@
 package main.ui;
 
 import java.awt.*;
-import java.util.List;
-import javax.swing.*; // [추가] 구매 내역의 상품 정보를 가져오기 위해 필요
+import javax.swing.*;
 import main.SpaceMallApp;
 import main.db.CartDatabase;
 import main.db.UserDatabase;
-import main.model.Product;
 import main.model.User;
-
 
 public class MyPagePanel extends JPanel {
     private SpaceMallApp app;
@@ -35,10 +32,10 @@ public class MyPagePanel extends JPanel {
         phoneField = new JTextField();
         addressField = new JTextField();
 
-        centerPanel.add(createGreenLabel("아이디 (수정불가):")); centerPanel.add(idLabel);
-        centerPanel.add(createGreenLabel("비밀번호:")); centerPanel.add(pwField);
-        centerPanel.add(createGreenLabel("전화번호:")); centerPanel.add(phoneField);
-        centerPanel.add(createGreenLabel("우주 주소:")); centerPanel.add(addressField);
+        centerPanel.add(createGreenLabel("ID:")); centerPanel.add(idLabel);
+        centerPanel.add(createGreenLabel("password:")); centerPanel.add(pwField);
+        centerPanel.add(createGreenLabel("phonecall:")); centerPanel.add(phoneField);
+        centerPanel.add(createGreenLabel("address:")); centerPanel.add(addressField);
 
         JButton updateBtn = new JButton("정보 업데이트");
         updateBtn.addActionListener(e -> {
@@ -48,40 +45,25 @@ public class MyPagePanel extends JPanel {
                 u.setPhone(phoneField.getText());
                 u.setAddress(addressField.getText());
                 UserDatabase.getInstance().update(u);
-                JOptionPane.showMessageDialog(this, "정보가 우주 서버에 저장되었습니다.");
+                JOptionPane.showMessageDialog(this, "정보가 우리 서버에 저장됐다!");
             }
         });
-        centerPanel.add(new JLabel("")); // 빈칸 맞추기
+        centerPanel.add(new JLabel("")); 
         centerPanel.add(updateBtn);
 
         add(centerPanel, BorderLayout.CENTER);
 
-        // 하단 버튼들
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBackground(Color.DARK_GRAY);
         JButton cartBtn = new JButton("내 장바구니 보기");
-        JButton historyBtn = new JButton("구매내역 보기"); // [수정] 텍스트 변경
+        JButton historyBtn = new JButton("나의물건 보기"); 
         JButton logoutBtn = new JButton("로그아웃");
         JButton backBtn = new JButton("메인으로");
 
         cartBtn.addActionListener(e -> app.showCartPanel());
         
-        // [핵심 추가] 구매 내역 버튼 액션
-        historyBtn.addActionListener(e -> {
-            User u = app.getCurrentUser();
-            if (u != null) {
-                List<Product> history = u.getPurchaseHistory();
-                if (history.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "아직 우주에서 구매한 내역이 없습니다.", "텅~", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    StringBuilder sb = new StringBuilder("=== 나의 우주 구매 내역 ===\n\n");
-                    for (Product p : history) {
-                        sb.append("- ").append(p.getName()).append(" [").append(p.getPrice()).append("원]\n");
-                    }
-                    JOptionPane.showMessageDialog(this, sb.toString(), "영수증 보관함", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        });
+        // [수정] 팝업 대신 새로 만든 패널 화면으로 이동
+        historyBtn.addActionListener(e -> app.switchPanel("HISTORY"));
 
         logoutBtn.addActionListener(e -> {
             CartDatabase.getInstance().clearCart();
@@ -104,11 +86,18 @@ public class MyPagePanel extends JPanel {
         return l;
     }
 
-    // 마이페이지 열릴 때마다 호출되어 데이터 채워넣기
     public void loadUserData() {
         User u = app.getCurrentUser();
         if (u != null) {
-            idLabel.setText(u.getId());
+            // [추가] VIP 여부에 따른 타이틀 변경
+            if(u.isVip()) {
+                idLabel.setText(u.getId() + " ~VIP~");
+                idLabel.setForeground(Color.YELLOW); // VIP는 노란색으로 강조
+            } else {
+                idLabel.setText(u.getId());
+                idLabel.setForeground(Color.WHITE);
+            }
+            
             pwField.setText(u.getPassword());
             phoneField.setText(u.getPhone());
             addressField.setText(u.getAddress());

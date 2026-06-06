@@ -11,16 +11,18 @@ import main.ui.IntroPanel;
 import main.ui.LoginPanel;
 import main.ui.MainPanel;
 import main.ui.MyPagePanel;
+import main.ui.PurchaseHistoryPanel; // 추가된 패널
 import main.ui.RegisterPanel;
 
 public class SpaceMallApp extends JFrame {
     private CardLayout cardLayout = new CardLayout();
     private JPanel container = new JPanel(cardLayout);
-    private User currentUser = null; // 로그인 상태 저장
-    private MainPanel mainPanel; // 업데이트를 위해 변수로 빼둡니다.
+    private User currentUser = null; 
+    private MainPanel mainPanel; 
     private MyPagePanel myPagePanel;
     private CartPanel cartPanel;
     private CheckoutPanel checkoutPanel;
+    private PurchaseHistoryPanel historyPanel; // 추가
 
     public SpaceMallApp() {
         setTitle("우주 쇼핑몰");
@@ -28,14 +30,12 @@ public class SpaceMallApp extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // 패널 초기화
         cartPanel = new CartPanel(this);
         checkoutPanel = new CheckoutPanel(this);
         mainPanel = new MainPanel(this);
         myPagePanel = new MyPagePanel(this);
+        historyPanel = new PurchaseHistoryPanel(this); // 초기화
 
-        // 컨테이너에 화면 추가
-        
         container.add(new IntroPanel(this), "INTRO");
         container.add(mainPanel, "MAIN");
         container.add(new LoginPanel(this), "LOGIN");
@@ -43,6 +43,7 @@ public class SpaceMallApp extends JFrame {
         container.add(myPagePanel, "MYPAGE");
         container.add(cartPanel, "CART");
         container.add(checkoutPanel, "CHECKOUT");
+        container.add(historyPanel, "HISTORY"); // 추가
 
         add(container);
         setVisible(true);
@@ -51,28 +52,27 @@ public class SpaceMallApp extends JFrame {
     public User getCurrentUser() { return currentUser; }
     public void setCurrentUser(User user) { this.currentUser = user; }
     
-    // 기본 화면 이동
     public void switchPanel(String panelName) {
         if(panelName.equals("MAIN")) {
-            mainPanel.updateHeader(); // 메인 화면으로 갈 때마다 헤더(로그인/마이페이지 버튼) 갱신
+            mainPanel.refreshProductList(); // [수정] 메인으로 갈 때마다 남은 상품 강제 갱신
+            mainPanel.updateHeader(); 
         } else if(panelName.equals("MYPAGE")) {
-            myPagePanel.loadUserData(); // 마이페이지 진입 시 최신 데이터 로드
+            myPagePanel.loadUserData(); 
+        } else if(panelName.equals("HISTORY")) {
+            historyPanel.loadHistory(); // [추가] 구매내역 화면 진입 시 데이터 로드
         }
         cardLayout.show(container, panelName);
     }
 
-    // 장바구니 화면으로 이동 (이동 전 최신 DB 데이터로 새로고침)
     public void showCartPanel() {
         cartPanel.refreshCartUI();
         cardLayout.show(container, "CART");
     }
 
-    // 결제 화면으로 이동 (선택된 총 금액 전달)
     public void showCheckoutPanel(List<Product> products, int amount) {
         checkoutPanel.setCheckoutData(products, amount);
         cardLayout.show(container, "CHECKOUT");
     }
-    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new SpaceMallApp());

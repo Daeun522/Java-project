@@ -3,10 +3,13 @@ package main.ui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.*;
 import main.SpaceMallApp;
 import main.db.CartDatabase;
+import main.db.ProductDatabase;
+import main.db.PurchaseDatabase;
 import main.model.Product;
 import main.model.User;
 
@@ -25,11 +28,10 @@ public class CheckoutPanel extends JPanel {
         title.setFont(new Font("Gulim", Font.BOLD, 24));
         add(title, BorderLayout.NORTH);
 
-        // 영수증 내역이 출력될 텍스트 구역
         receiptArea = new JTextArea();
         receiptArea.setEditable(false);
         receiptArea.setBackground(Color.DARK_GRAY);
-        receiptArea.setForeground(Color.GREEN); // 터미널 감성
+        receiptArea.setForeground(Color.GREEN); 
         receiptArea.setFont(new Font("Monospaced", Font.BOLD, 16));
         
         JScrollPane scrollPane = new JScrollPane(receiptArea);
@@ -49,7 +51,6 @@ public class CheckoutPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    // 넘어온 결제 데이터로 영수증 텍스트 그리기
     public void setCheckoutData(List<Product> items, int amount) {
         this.currentItems = items;
         User u = app.getCurrentUser();
@@ -74,9 +75,7 @@ public class CheckoutPanel extends JPanel {
         receiptArea.setText(sb.toString());
     }
 
-    // 결제 타이머 애니메이션 처리
     private void processPayment() {
-        // 타이머용 커스텀 다이얼로그(팝업창) 생성
         JDialog dialog = new JDialog(app, "로켓 배송 진행중...", true);
         dialog.setSize(350, 200);
         dialog.setLocationRelativeTo(this);
@@ -99,7 +98,6 @@ public class CheckoutPanel extends JPanel {
         dialog.add(msg2);
         dialog.add(timerLabel);
 
-        // 1초(1000ms)마다 실행되는 타이머
         Timer timer = new Timer(1000, new ActionListener() {
             int secondsLeft = 8;
             @Override
@@ -108,18 +106,32 @@ public class CheckoutPanel extends JPanel {
                 timerLabel.setText("도착까지 00:00:0" + secondsLeft);
                 
                 if (secondsLeft <= 0) {
-                    ((Timer)e.getSource()).stop(); // 타이머 종료
-                    dialog.dispose(); // 팝업 닫기
+                    ((Timer)e.getSource()).stop(); 
+                    dialog.dispose(); 
                     
-                    // 1. 도착 알림
                     JOptionPane.showMessageDialog(app, "도착!", "로켓 배송 완료", JOptionPane.INFORMATION_MESSAGE);
                     
-                    // 2. 유저 정보에 구매 내역 추가
-                    if(app.getCurrentUser() != null) {
-                        app.getCurrentUser().addPurchaseHistory(currentItems);
+                    User u = app.getCurrentUser();
+                    if(u != null) {
+                        int totalPurchasePrice = 0;
+                        for(Product p : currentItems) { totalPurchasePrice += p.getPrice(); }
+                        
+                        boolean wasVip = u.isVip();
+                        u.addSpent(totalPurchasePrice);
+                        
+                        if (u.getTotalSpent() >= 100000000 && !wasVip) {
+                            u.setVip(true);
+                            JOptionPane.showMessageDialog(app, "[감사카드\n나는 우주 쇼핑몰 VIP!\n~감사 세포 동봉~]", "VIP 승급!", JOptionPane.WARNING_MESSAGE);
+                            Product vipCard = new Product("감사카드", "", 0, 1, "나는 우주 쇼핑몰 VIP!");
+                            PurchaseDatabase.getInstance().addPurchase(u.getId(), Arrays.asList(vipCard));
+                        }
+                        
+                        PurchaseDatabase.getInstance().addPurchase(u.getId(), currentItems);
+                        
+                        // [수정] 수량이 0이 된 품절 상품만 DB에서 날려버립니다.
+                        ProductDatabase.getInstance().removeSoldOutProducts();
                     }
                     
-                    // 3. 장바구니 비우고 메인으로 튕겨내기
                     for(Product p : currentItems){
                         CartDatabase.getInstance().removeProduct(p);
                     }
@@ -129,6 +141,6 @@ public class CheckoutPanel extends JPanel {
         });
         
         timer.start();
-        dialog.setVisible(true); // 창을 화면에 띄움 (타이머가 0이 될 때까지 여기서 멈춤)
+        dialog.setVisible(true);
     }
 }

@@ -1,15 +1,14 @@
 package main.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class User {
     private String id;
     private String password;
     private String phone;
     private String address;
-    // [추가] 구매 내역을 저장할 리스트
-    private List<Product> purchaseHistory = new ArrayList<>();
+    
+    // [추가] VIP 시스템용 변수
+    private int totalSpent = 0;
+    private boolean isVip = false;
 
     public User(String id, String password, String phone, String address) {
         this.id = id;
@@ -27,9 +26,9 @@ public class User {
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
     
-    // [추가] 구매 내역 관련 메서드
-    public List<Product> getPurchaseHistory() { return purchaseHistory; }
-    public void addPurchaseHistory(List<Product> products) {
-        this.purchaseHistory.addAll(products);
-    }
+    // [추가] 누적 금액 및 VIP 관리 메서드
+    public int getTotalSpent() { return totalSpent; }
+    public void addSpent(int amount) { this.totalSpent += amount; }
+    public boolean isVip() { return isVip; }
+    public void setVip(boolean vip) { this.isVip = vip; }
 }
