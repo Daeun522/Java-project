@@ -81,6 +81,9 @@ public class CheckoutPanel extends JPanel {
         dialog.setLocationRelativeTo(this);
         dialog.setLayout(new GridLayout(3, 1));
         dialog.getContentPane().setBackground(Color.BLACK);
+        
+        // [핵심 해결 1] 팝업 우측 상단의 'X' 버튼을 눌러도 창이 안 닫히게 막음! (중복 결제 원천 차단)
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
         JLabel msg1 = new JLabel("성공구매!", SwingConstants.CENTER);
         msg1.setForeground(Color.YELLOW);
@@ -128,8 +131,12 @@ public class CheckoutPanel extends JPanel {
                         
                         PurchaseDatabase.getInstance().addPurchase(u.getId(), currentItems);
                         
-                        // [수정] 수량이 0이 된 품절 상품만 DB에서 날려버립니다.
-                        ProductDatabase.getInstance().removeSoldOutProducts();
+                        // [핵심 해결 2] 이번에 '진짜로 결제한 물건'들 중에서 수량이 0인 것만 DB에서 삭제
+                        for (Product p : currentItems) {
+                            if (p.getQuantity() <= 0) {
+                                ProductDatabase.getInstance().removeProduct(p);
+                            }
+                        }
                     }
                     
                     for(Product p : currentItems){

@@ -23,9 +23,9 @@ public class ProductDatabase {
         return productList;
     }
 
-    // [수정] 수량이 0이 되어 완전 품절된 상품만 리스트에서 제거합니다.
-    public void removeSoldOutProducts() {
-        productList.removeIf(p -> p.getQuantity() <= 0);
+    // [수정된 부분] 무조건 0개인 것을 지우지 않고, 요청받은 특정 상품만 리스트에서 제거합니다.
+    public void removeProduct(Product p) {
+        productList.remove(p);
     }
 
     private void loadProductsFromFile(String filePath) {
