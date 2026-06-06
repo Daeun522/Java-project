@@ -34,7 +34,7 @@ public class MainPanel extends JPanel {
 
         JLabel headerLabel = new JLabel("🌈🌈🌈 우주쇼핑몰 🌈🌈🌈", SwingConstants.CENTER);
         headerLabel.setForeground(Color.GREEN);
-        headerLabel.setFont(new Font("Gulim", Font.BOLD | Font.ITALIC, 40));
+        headerLabel.setFont(new Font("Gulim", Font.BOLD , 40));
         header.add(headerLabel, BorderLayout.CENTER);
 
         // [추가] 우측 상단 동적 버튼 패널 초기화
@@ -78,7 +78,7 @@ public class MainPanel extends JPanel {
         if (app.getCurrentUser() == null) {
             // [비로그인 상태] 로그인 | 회원가입
             JButton loginBtn = new JButton("접속(로그인)");
-            JButton regBtn = new JButton("신규등록");
+            JButton regBtn = new JButton("가입하다");
             
             styleButton(loginBtn, btnBg, btnFg, retroFont);
             styleButton(regBtn, btnBg, btnFg, retroFont);
@@ -154,7 +154,7 @@ public class MainPanel extends JPanel {
                 }
             }
         } catch (IOException e) {
-            System.out.println("상품 파일을 찾을 수 없거나 읽기 오류: " + e.getMessage());
+            System.out.println("ERROR!: " + e.getMessage());
         }
         return list;
     }
