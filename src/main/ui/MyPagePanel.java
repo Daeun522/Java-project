@@ -17,7 +17,7 @@ public class MyPagePanel extends JPanel {
         setBackground(Color.BLACK);
         setLayout(new BorderLayout());
 
-        JLabel title = new JLabel("★ 내 정보 센터 ★", SwingConstants.CENTER);
+        JLabel title = new JLabel("★ 내 정보 ★", SwingConstants.CENTER);
         title.setForeground(Color.YELLOW);
         title.setFont(new Font("SansSerif", Font.BOLD, 24));
         add(title, BorderLayout.NORTH);
@@ -57,8 +57,8 @@ public class MyPagePanel extends JPanel {
         bottomPanel.setBackground(Color.DARK_GRAY);
         JButton cartBtn = new JButton("내 장바구니 보기");
         JButton historyBtn = new JButton("나의물건 보기"); 
-        JButton logoutBtn = new JButton("로그아웃");
-        JButton backBtn = new JButton("메인으로");
+        JButton logoutBtn = new JButton("logout");
+        JButton backBtn = new JButton("Main");
 
         cartBtn.addActionListener(e -> app.showCartPanel());
         
@@ -91,7 +91,7 @@ public class MyPagePanel extends JPanel {
         if (u != null) {
             // [추가] VIP 여부에 따른 타이틀 변경
             if(u.isVip()) {
-                idLabel.setText(u.getId() + " ~VIP~");
+                idLabel.setText(u.getId() + " ~VIP: 당신은 소중한 사람~");
                 idLabel.setForeground(Color.YELLOW); // VIP는 노란색으로 강조
             } else {
                 idLabel.setText(u.getId());

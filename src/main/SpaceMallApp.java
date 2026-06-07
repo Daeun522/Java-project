@@ -11,7 +11,7 @@ import main.ui.IntroPanel;
 import main.ui.LoginPanel;
 import main.ui.MainPanel;
 import main.ui.MyPagePanel;
-import main.ui.PurchaseHistoryPanel; // 추가된 패널
+import main.ui.PurchaseHistoryPanel;
 import main.ui.RegisterPanel;
 
 public class SpaceMallApp extends JFrame {
@@ -22,7 +22,7 @@ public class SpaceMallApp extends JFrame {
     private MyPagePanel myPagePanel;
     private CartPanel cartPanel;
     private CheckoutPanel checkoutPanel;
-    private PurchaseHistoryPanel historyPanel; // 추가
+    private PurchaseHistoryPanel historyPanel; 
 
     public SpaceMallApp() {
         setTitle("우주 쇼핑몰");
@@ -34,7 +34,7 @@ public class SpaceMallApp extends JFrame {
         checkoutPanel = new CheckoutPanel(this);
         mainPanel = new MainPanel(this);
         myPagePanel = new MyPagePanel(this);
-        historyPanel = new PurchaseHistoryPanel(this); // 초기화
+        historyPanel = new PurchaseHistoryPanel(this);
 
         container.add(new IntroPanel(this), "INTRO");
         container.add(mainPanel, "MAIN");
@@ -43,7 +43,7 @@ public class SpaceMallApp extends JFrame {
         container.add(myPagePanel, "MYPAGE");
         container.add(cartPanel, "CART");
         container.add(checkoutPanel, "CHECKOUT");
-        container.add(historyPanel, "HISTORY"); // 추가
+        container.add(historyPanel, "HISTORY");
 
         add(container);
         setVisible(true);
@@ -54,12 +54,12 @@ public class SpaceMallApp extends JFrame {
     
     public void switchPanel(String panelName) {
         if(panelName.equals("MAIN")) {
-            mainPanel.refreshProductList(); // [수정] 메인으로 갈 때마다 남은 상품 강제 갱신
+            mainPanel.refreshProductList(); //상품갱신
             mainPanel.updateHeader(); 
         } else if(panelName.equals("MYPAGE")) {
             myPagePanel.loadUserData(); 
         } else if(panelName.equals("HISTORY")) {
-            historyPanel.loadHistory(); // [추가] 구매내역 화면 진입 시 데이터 로드
+            historyPanel.loadHistory();
         }
         cardLayout.show(container, panelName);
     }

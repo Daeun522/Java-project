@@ -1,10 +1,10 @@
 package main.ui;
 
+import java.awt.*;
+import javax.swing.*;
 import main.SpaceMallApp;
 import main.db.UserDatabase;
 import main.model.User;
-import javax.swing.*;
-import java.awt.*;
 
 public class RegisterPanel extends JPanel {
     public RegisterPanel(SpaceMallApp app) {
@@ -13,11 +13,10 @@ public class RegisterPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel title = new JLabel("=== 외계인 신규 등록 ===");
+        JLabel title = new JLabel("=== 신규 등록 ===");
         title.setForeground(Color.CYAN);
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         add(title, gbc);
-
         gbc.gridwidth = 1; gbc.gridy++;
         JTextField idField = new JTextField(15);
         addLabelAndField("새 아이디:", idField, gbc);
@@ -32,7 +31,7 @@ public class RegisterPanel extends JPanel {
 
         gbc.gridy++;
         JTextField addressField = new JTextField(15);
-        addLabelAndField("우주 주소:", addressField, gbc);
+        addLabelAndField("주소:", addressField, gbc);
 
         gbc.gridy++; gbc.gridx = 0; gbc.gridwidth = 2;
         JLabel errorLabel = new JLabel(" ");
@@ -56,7 +55,7 @@ public class RegisterPanel extends JPanel {
             String addr = addressField.getText();
 
             if (phone.length() != 11) {
-                errorLabel.setText("오류: 전화번호는 정확히 11자리여야 합니다.");
+                errorLabel.setText("Error: 전화번호는 정확히 11자리여야 합니다.");
                 return;
             }
 
@@ -67,7 +66,7 @@ public class RegisterPanel extends JPanel {
                 errorLabel.setText(" ");
                 app.switchPanel("MAIN");
             } else {
-                errorLabel.setText("오류: 이미 존재하는 아이디입니다.");
+                errorLabel.setText("Error: 이미 존재하는 아이디입니다.");
             }
         });
     }

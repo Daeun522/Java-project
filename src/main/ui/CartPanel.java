@@ -78,7 +78,7 @@ public class CartPanel extends JPanel {
         List<Product> cartItems = CartDatabase.getInstance().getCartList();
         
         if (cartItems.isEmpty()) {
-            listPanel.add(new JLabel("손수레가 텅 비었다..."));
+            listPanel.add(new JLabel("장바구니가 텅 비었다..."));
         } else {
             for (Product p : cartItems) {
                 JPanel itemRow = new JPanel(new FlowLayout(FlowLayout.LEFT));

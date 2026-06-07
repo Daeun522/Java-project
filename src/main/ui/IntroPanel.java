@@ -7,13 +7,19 @@ import javax.swing.*;
 import main.SpaceMallApp;
 
 public class IntroPanel extends JPanel {
+    
+    private Image backgroundImage; 
     public IntroPanel(SpaceMallApp app) {
-        setBackground(Color.BLACK);
+        try {
+            backgroundImage = new ImageIcon("background.png").getImage();
+        } catch (Exception e) {
+            System.out.println("배경 이미지를 불러올 수 없습니다: " + e.getMessage());
+        }
+
         setLayout(new GridBagLayout()); // 화면 중앙 정렬을 위한 레이아웃
 
         // 컴포넌트들을 세로로 배치하기 위한 내부 패널 (3행 1열, 행간 여백 20)
         JPanel textContainer = new JPanel(new GridLayout(3, 1, 0, 20));
-        textContainer.setBackground(Color.BLACK);
         textContainer.setOpaque(false); // 배경 투명화
 
         // 공통으로 사용할 폰트 설정 (크기 30, 볼드체)
@@ -24,7 +30,7 @@ public class IntroPanel extends JPanel {
         titleLabel.setForeground(Color.CYAN);
         titleLabel.setFont(commonFont);
 
-        // 2. 두 번째 줄: 밑줄(<u> 태그 활용)이 적용된 서브 타이틀
+        // 2. 두 번째 줄: 밑줄이 적용된 서브 타이틀
         JLabel subTitleLabel = new JLabel("<html><u>※외계에서 온 멋진 물건※~!!</u></html>", SwingConstants.CENTER);
         subTitleLabel.setForeground(Color.CYAN);
         subTitleLabel.setFont(commonFont);
@@ -50,5 +56,13 @@ public class IntroPanel extends JPanel {
 
         // 최종적으로 메인 IntroPanel의 중앙에 배치
         add(textContainer);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
     }
 }

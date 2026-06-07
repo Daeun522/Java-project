@@ -6,13 +6,15 @@ public class Product {
     private int price;
     private int quantity;
     private String description;
+    private int categoryId;
 
-    public Product(String name, String imageName, int price, int quantity, String description) {
+    public Product(String name, String imageName, int price, int quantity, String description, int categoryId) {
         this.name = name;
         this.imageName = imageName;
         this.price = price;
         this.quantity = quantity;
         this.description = description;
+        this.categoryId = categoryId;
     }
 
     // Getter 메서드
@@ -21,15 +23,16 @@ public class Product {
     public int getPrice() { return price; }
     public int getQuantity() { return quantity; }
     public String getDescription() { return description; }
+    public int getCategoryId(){ return categoryId;}
 
-    // [추가] 장바구니 담기 시 수량 차감
+    // 장바구니 담기 시 수량 차감
     public void decreaseQuantity() {
         if (this.quantity > 0) {
             this.quantity--;
         }
     }
 
-    // [추가] 장바구니에서 뺄 때 수량 원상복구
+    // 장바구니에서 뺄 때 수량 원상복구
     public void increaseQuantity() {
         this.quantity++;
     }

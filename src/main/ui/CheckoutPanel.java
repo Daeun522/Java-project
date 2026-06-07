@@ -13,6 +13,7 @@ import main.db.PurchaseDatabase;
 import main.model.Product;
 import main.model.User;
 
+//결제 화면입니다. 
 public class CheckoutPanel extends JPanel {
     private SpaceMallApp app;
     private JTextArea receiptArea;
@@ -23,6 +24,7 @@ public class CheckoutPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Color.BLACK);
 
+        //최종 결제 페이지: 물건, 총합, 결제 버튼 기능
         JLabel title = new JLabel("=== 최종 결제 확인 ===", SwingConstants.CENTER);
         title.setForeground(Color.CYAN);
         title.setFont(new Font("Gulim", Font.BOLD, 24));
@@ -43,7 +45,7 @@ public class CheckoutPanel extends JPanel {
         payBtn.setForeground(Color.WHITE);
         payBtn.setFont(new Font("Gulim", Font.BOLD, 20));
 
-        payBtn.addActionListener(e -> processPayment());
+        payBtn.addActionListener(e -> processPayment());    //버튼: processPayment 수행
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBackground(Color.BLACK);
@@ -56,7 +58,7 @@ public class CheckoutPanel extends JPanel {
         User u = app.getCurrentUser();
         
         StringBuilder sb = new StringBuilder();
-        sb.append("\n [ 구매 외계인 정보 ]\n");
+        sb.append("\n [ 구매 정보 ]\n");
         sb.append(" - 아이디: ").append(u.getId()).append("\n");
         sb.append(" - 배송지: ").append(u.getAddress()).append("\n\n");
         
@@ -80,9 +82,9 @@ public class CheckoutPanel extends JPanel {
         dialog.setSize(350, 200);
         dialog.setLocationRelativeTo(this);
         dialog.setLayout(new GridLayout(3, 1));
-        dialog.getContentPane().setBackground(Color.BLACK);
+        dialog.getContentPane().setBackground(Color.white);
         
-        // [핵심 해결 1] 팝업 우측 상단의 'X' 버튼을 눌러도 창이 안 닫히게 막음! (중복 결제 원천 차단)
+        // 배송중일 때 창 못닫게 함
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
         JLabel msg1 = new JLabel("성공구매!", SwingConstants.CENTER);
@@ -93,7 +95,7 @@ public class CheckoutPanel extends JPanel {
         msg2.setForeground(Color.CYAN);
         msg2.setFont(new Font("Gulim", Font.BOLD, 18));
 
-        JLabel timerLabel = new JLabel("도착까지 00:00:08", SwingConstants.CENTER);
+        JLabel timerLabel = new JLabel("도착까지 00:00:05", SwingConstants.CENTER);
         timerLabel.setForeground(Color.RED);
         timerLabel.setFont(new Font("Monospaced", Font.BOLD, 20));
 
@@ -102,7 +104,7 @@ public class CheckoutPanel extends JPanel {
         dialog.add(timerLabel);
 
         Timer timer = new Timer(1000, new ActionListener() {
-            int secondsLeft = 8;
+            int secondsLeft = 5;
             @Override
             public void actionPerformed(ActionEvent e) {
                 secondsLeft--;
@@ -125,13 +127,13 @@ public class CheckoutPanel extends JPanel {
                         if (u.getTotalSpent() >= 100000000 && !wasVip) {
                             u.setVip(true);
                             JOptionPane.showMessageDialog(app, "[감사카드\n나는 우주 쇼핑몰 VIP!\n~감사 세포 동봉~]", "VIP 승급!", JOptionPane.WARNING_MESSAGE);
-                            Product vipCard = new Product("감사카드", "", 0, 1, "나는 우주 쇼핑몰 VIP!");
+                            Product vipCard = new Product("감사카드", "", 0, 1, "나는 우주 쇼핑몰 VIP!", 3);
                             PurchaseDatabase.getInstance().addPurchase(u.getId(), Arrays.asList(vipCard));
                         }
                         
                         PurchaseDatabase.getInstance().addPurchase(u.getId(), currentItems);
                         
-                        // [핵심 해결 2] 이번에 '진짜로 결제한 물건'들 중에서 수량이 0인 것만 DB에서 삭제
+                        //'진짜로 결제한 물건'들 중에서 수량이 0인 것만 DB에서 삭제
                         for (Product p : currentItems) {
                             if (p.getQuantity() <= 0) {
                                 ProductDatabase.getInstance().removeProduct(p);

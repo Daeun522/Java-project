@@ -6,7 +6,7 @@ public class User {
     private String phone;
     private String address;
     
-    // [추가] VIP 시스템용 변수
+    // VIP 시스템용 변수
     private int totalSpent = 0;
     private boolean isVip = false;
 
@@ -26,7 +26,7 @@ public class User {
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
     
-    // [추가] 누적 금액 및 VIP 관리 메서드
+    // 누적 금액 및 VIP 관리 메서드
     public int getTotalSpent() { return totalSpent; }
     public void addSpent(int amount) { this.totalSpent += amount; }
     public boolean isVip() { return isVip; }

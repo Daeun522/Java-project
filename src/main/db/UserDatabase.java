@@ -9,7 +9,7 @@ public class UserDatabase {
 
     private UserDatabase() {
         // 테스트용 기본 계정 생성 (바로 로그인 테스트 가능)
-        userList.add(new User("admin", "1234", "01012345678", "우주 정거장 1호"));
+        userList.add(new User("admin", "1234", "01012345678", "earth"));
     }
 
     public static UserDatabase getInstance() {

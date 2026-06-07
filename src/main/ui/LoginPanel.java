@@ -1,10 +1,10 @@
 package main.ui;
 
+import java.awt.*;
+import javax.swing.*;
 import main.SpaceMallApp;
 import main.db.UserDatabase;
 import main.model.User;
-import javax.swing.*;
-import java.awt.*;
 
 public class LoginPanel extends JPanel {
     public LoginPanel(SpaceMallApp app) {
@@ -14,18 +14,18 @@ public class LoginPanel extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0; gbc.gridy = 0;
 
-        JLabel title = new JLabel("[ 우주 통신 로그인 ]");
+        JLabel title = new JLabel("[ 외계 상점 로그인 ]");
         title.setForeground(Color.GREEN);
         add(title, gbc);
 
         gbc.gridy++;
         JTextField idField = new JTextField(15);
-        add(new JLabel("아이디: "), gbc);
+        add(new JLabel("ID: "), gbc);
         gbc.gridx = 1; add(idField, gbc);
 
         gbc.gridx = 0; gbc.gridy++;
         JPasswordField pwField = new JPasswordField(15);
-        add(new JLabel("비밀번호: "), gbc);
+        add(new JLabel("password: "), gbc);
         gbc.gridx = 1; add(pwField, gbc);
 
         gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 2;
@@ -34,8 +34,8 @@ public class LoginPanel extends JPanel {
         add(errorLabel, gbc);
 
         gbc.gridy++;
-        JButton loginBtn = new JButton("접속하기");
-        JButton backBtn = new JButton("돌아가기");
+        JButton loginBtn = new JButton("접속하다");
+        JButton backBtn = new JButton("돌아가다");
 
         JPanel btnPanel = new JPanel();
         btnPanel.setBackground(Color.BLACK);
@@ -56,7 +56,7 @@ public class LoginPanel extends JPanel {
                 errorLabel.setText(" ");
                 app.switchPanel("MAIN");
             } else {
-                errorLabel.setText("아이디 또는 비밀번호가 올바르지 않습니다.");
+                errorLabel.setText("id or password is incorrect!");
             }
         });
 
