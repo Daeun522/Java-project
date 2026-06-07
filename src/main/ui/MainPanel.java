@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
-import java.util.ArrayList; // [추가] 리스트 필터링을 위해 추가
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import main.SpaceMallApp;
@@ -39,12 +39,12 @@ public class MainPanel extends JPanel {
         }
 
         // ==========================================
-        // 1. 상단 영역 (NORTH): 헤더 + 광고 배너
+        // 1. 상단 영역 (NORTH): 헤더 + 광고 배너(event)
         // ==========================================
         JPanel topContainer = new JPanel(new BorderLayout());
         topContainer.setOpaque(false);
 
-        // --- 헤더 (1층) ---
+        // --- 헤더 ---
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(new Color(30, 30, 30, 200));
         header.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -73,7 +73,7 @@ public class MainPanel extends JPanel {
 
         topContainer.add(header, BorderLayout.NORTH);
 
-        // --- 히든 배너 영역 (2층) ---
+        // --- 히든 배너 영역 ---
         bannerPanel = new JPanel(new BorderLayout());
         bannerPanel.setBackground(Color.DARK_GRAY);
         bannerPanel.setVisible(false);
@@ -168,7 +168,7 @@ public class MainPanel extends JPanel {
             catBtn.setBackground(Color.BLUE);
             catBtn.setForeground(Color.WHITE);
             
-            // [수정] 버튼 클릭 시 현재 카테고리를 변경하고 화면 새로고침
+            // 버튼 클릭 시 현재 카테고리를 변경하고 화면 새로고침
             catBtn.addActionListener(e -> {
                 currentCategoryId = catId; 
                 refreshProductList();

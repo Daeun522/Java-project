@@ -7,7 +7,14 @@ import main.db.UserDatabase;
 import main.model.User;
 
 public class LoginPanel extends JPanel {
+    private SpaceMallApp app;
+    
+    // [추가] 로그인 실패 횟수 저장 변수
+    private int loginFailCount = 0; 
+    private final int MAX_FAIL_COUNT = 5;
+
     public LoginPanel(SpaceMallApp app) {
+        this.app = app;
         setBackground(Color.BLACK);
         setLayout(new GridBagLayout()); // 중앙 배치
         GridBagConstraints gbc = new GridBagConstraints();
@@ -43,7 +50,10 @@ public class LoginPanel extends JPanel {
         add(btnPanel, gbc);
 
         // 이벤트
-        backBtn.addActionListener(e -> app.switchPanel("MAIN"));
+        backBtn.addActionListener(e -> {
+            loginFailCount = 0; // 돌아갈 때 카운트 초기화 (선택사항)
+            app.switchPanel("MAIN");
+        });
         
         loginBtn.addActionListener(e -> {
             String id = idField.getText();
@@ -51,12 +61,23 @@ public class LoginPanel extends JPanel {
             User user = UserDatabase.getInstance().login(id, pw);
             
             if (user != null) {
+                // 로그인 성공
                 app.setCurrentUser(user);
                 idField.setText(""); pwField.setText("");
                 errorLabel.setText(" ");
+                loginFailCount = 0; // 성공 시 카운트 초기화
                 app.switchPanel("MAIN");
             } else {
-                errorLabel.setText("id or password is incorrect!");
+                // [수정] 로그인 실패 로직
+                loginFailCount++;
+                
+                if (loginFailCount >= MAX_FAIL_COUNT) {
+                    JOptionPane.showMessageDialog(this, "비정상적인 로그인이 감지되었습니다. 서버를 종료합니다.", 
+                                                "경고", JOptionPane.ERROR_MESSAGE);
+                    System.exit(0); // 프로그램 강제 종료
+                } else {
+                    errorLabel.setText("ID or PW incorrect! (" + loginFailCount + "/" + MAX_FAIL_COUNT + ")");
+                }
             }
         });
 
